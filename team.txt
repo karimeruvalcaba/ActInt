@@ -1,5 +1,5 @@
 /* AUTORES
- * Carlos Ernesto Soto Alarcón A01747990: 
- * Sergio Alfonso Casillas Santoyo A01424863
- * Karime Itzel Ruvalcaba Pérez A01656188
+ * Carlos Ernesto Soto Alarcón A01747990: funciones abrir_achivo_p2_p3, manacher, parte_2
+ * Sergio Alfonso Casillas Santoyo A01424863: funciones abrir_achivo_p1, kmp, parte_1
+ * Karime Itzel Ruvalcaba Pérez A01656188: funciones abrir_achivo_p2_p3, dp, parte_3
  */
