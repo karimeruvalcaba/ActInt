@@ -1,4 +1,9 @@
-#include <iostream>
+/* AUTORES
+ * Carlos Ernesto Soto Alarcón A01747990
+ * Sergio Alfonso Casillas Santoyo A01424863
+ * Karime Itzel Ruvalcaba Pérez A01656188
+ */
+ #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
@@ -6,10 +11,13 @@
 
 using namespace std;
 
-class PrimeraEntrega {
+class ActInt1 {
 public:
-    // Helper function to read a file line by line
-    static vector<string> openFilePart1(const string& file_name) {
+    /*
+    * Función auxiliar para leer las líneas del archivo.
+    * Complejidad: O(n), n es el número de líneas en el archivo.
+    */
+    static vector<string> abrir_achivo_p1(const string& file_name) {
         vector<string> lines;
         ifstream file(file_name);
         string line;
@@ -20,15 +28,21 @@ public:
         return lines;
     }
 
-    // Helper function to read a file as a single string
-    static string openFilePart2AndPart3(const string& file_name) {
+    /**
+    * Función auxiliar para leer un archivo como un solo string.
+    * Complejidad: O(n), n es el número de caracteres en el archivo.
+    */
+    static string abrir_achivo_p2_p3(const string& file_name) {
         ifstream file(file_name);
         string content((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
         file.close();
         return content;
     }
 
-    // Knuth-Morris-Pratt (KMP) algorithm for substring search
+    /**
+    * Algoritmo de Knuth-Morris-Pratt (KMP) para la búsqueda de substrings.
+    * Complejidad: O(m + n), m es la longitud del "needle" y "n" es la longitud "haystack".
+     */
     int kmp(const string& haystack, const string& needle) {
         if (needle.empty()) return 0;
 
@@ -57,13 +71,18 @@ public:
         return -1;
     }
 
-    // Part 1: Detect malicious strings
-    string Part1(const vector<string>& transmission_files, const vector<string>& mcode_files) {
+    /**
+    * Parte 1: Detectar secuencias de chars maliciosas.
+    * Complejidad:
+    * - O(t * m * (h + n)), t es el número de archivos de transmisión, m es el número de archivos maliciosos
+    * h es el tamaño promedio del "haystack" y n es del tamaño promedio de "needle"
+     */
+    string parte_1(const vector<string>& transmission_files, const vector<string>& mcode_files) {
         string result;
         for (const auto& transmission_file : transmission_files) {
             for (const auto& mcode_file : mcode_files) {
-                vector<string> needles = openFilePart1(mcode_file);
-                string haystack = openFilePart2AndPart3(transmission_file);
+                vector<string> needles = abrir_achivo_p1(mcode_file);
+                string haystack = abrir_achivo_p2_p3(transmission_file);
 
                 bool found = false;
                 for (const auto& needle : needles) {
@@ -82,7 +101,10 @@ public:
         return result;
     }
 
-    // Manacher's algorithm to find the longest palindrome
+    /**
+    * Algoritmo de Manacher para encontrar el palíndromo más largo.
+    * Complejidad: O(n), n es la longitud del texto.
+     */
     pair<int, int> manacher(const string& text) {
         int n = text.size();
         vector<int> lps(2 * n + 1, 0);
@@ -117,14 +139,21 @@ public:
         return {start + 1, start + maxLength};
     }
 
-    string Part2(const string& trans) {
-        string transmission = openFilePart2AndPart3(trans);
+    /**
+    * Parte 2: Encontrar el palíndromo de chars más largo en el archivo de transmisión
+    * Complejidad: O(n), n es la longitud del texto en el archivo de transmisión
+     */
+    string parte_2(const string& trans) {
+        string transmission = abrir_achivo_p2_p3(trans);
         auto [start, end] = manacher(transmission);
         string palindrome = transmission.substr(start - 1, end - start + 1);
         return to_string(start) + " " + to_string(end) + " " + palindrome;
     }
 
-    // Dynamic programming to find the longest common substring
+    /**
+    * Algoritmo de programación dinámica para encontrar el substring común más largo.
+    * Complejidad: O(m * n), m y n son las longitudes de los dos strings de entrada.
+     */
     pair<int, int> dp(const string& s1, const string& s2) {
         int m = s1.size(), n = s2.size();
         vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
@@ -146,35 +175,43 @@ public:
         return {start + 1, endIndex};
     }
 
-    string Part3(const string& s1, const string& s2) {
-        string string1 = openFilePart2AndPart3(s1);
-        string string2 = openFilePart2AndPart3(s2);
+    /**
+    * Parte 3: Encontrar el substring común más largo entre los archivos de transmisión
+    * Complejidad: O(m * n), m y n son las longitudes del contenido de los dos archivos
+     */
+    string parte_3(const string& s1, const string& s2) {
+        string string1 = abrir_achivo_p2_p3(s1);
+        string string2 = abrir_achivo_p2_p3(s2);
         auto [start, end] = dp(string1, string2);
         string common_substring = string1.substr(start - 1, end - start + 1);
         return to_string(start) + " " + to_string(end) + " " + common_substring;
     }
 
+    /**
+    * Función principal para ejecutar las tres partes del programa.
+    *
+     */
     void main() {
         vector<string> transmission_files = {"transmission1.txt", "transmission2.txt"};
         vector<string> mcode_files = {"mcode1.txt", "mcode2.txt", "mcode3.txt"};
 
-        // Part 1
-        cout << "\n--- Part 1 ---\n\n";
-        cout << Part1(transmission_files, mcode_files);
+        // Parte 1
+        cout << "\nParte 1:\n\n";
+        cout << parte_1(transmission_files, mcode_files);
 
-        // Part 2
-        cout << "\n--- Part 2 ---\n\n";
-        cout << Part2("transmission1.txt") << endl;
-        cout << Part2("transmission2.txt") << endl;
+        // Parte 2
+        cout << "\nParte 2:\n\n";
+        cout << parte_2("transmission1.txt") << endl;
+        cout << parte_2("transmission2.txt") << endl;
 
-        // Part 3
-        cout << "\n--- Part 3 ---\n\n";
-        cout << Part3("transmission1.txt", "transmission2.txt") << endl;
+        // Parte 3
+        cout << "\nParte 3:\n\n";
+        cout << parte_3("transmission1.txt", "transmission2.txt") << endl;
     }
 };
 
 int main() {
-    PrimeraEntrega solution;
+    ActInt1 solution;
     solution.main();
     return 0;
 }
